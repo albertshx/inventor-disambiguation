@@ -17,85 +17,144 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-
 package edu.umass.cs.iesl.inventor_disambiguation.coreference
 
 import cc.factorie.app.nlp.hcoref.{GroundTruth, NodeVariables}
-import cc.factorie.variable.{BagOfWordsVariable, DenseDoubleBagVariable, DiffList, NoopDiff}
+import cc.factorie.variable.{
+  BagOfWordsVariable,
+  DenseDoubleBagVariable,
+  DiffList,
+  NoopDiff
+}
 import edu.umass.cs.iesl.inventor_disambiguation.data_structures.coreference.InventorMention
 
 /**
- * These are the variables that each node in the coreference tree maintains.
- * @param firstNames
- * @param middleNames
- * @param lastNames
- * @param locations
- * @param applicationIds
- * @param applicationTypes
- * @param applicationCountry
- * @param dates
- * @param patentCountry
- * @param patentTypes
- * @param title
- * @param titleEmb
- * @param keywords
- * @param coInventors
- * @param assignees
- * @param assigneeLocations
- * @param lawyers
- * @param lawyersLocations
- * @param cpc
- * @param ipcr
- * @param uspc
- * @param nber
- * @param canopy
- * @param truth
- * @param source
- */
+  * These are the variables that each node in the coreference tree maintains.
+  * @param firstNames
+  * @param middleNames
+  * @param lastNames
+  * @param locations
+  * @param applicationIds
+  * @param applicationTypes
+  * @param applicationCountry
+  * @param dates
+  * @param patentCountry
+  * @param patentTypes
+  * @param title
+  * @param titleEmb
+  * @param keywords
+  * @param coInventors
+  * @param assignees
+  * @param assigneeLocations
+  * @param lawyers
+  * @param lawyersLocations
+  * @param cpc
+  * @param ipcr
+  * @param uspc
+  * @param nber
+  * @param canopy
+  * @param truth
+  * @param source
+  */
 class InventorVars(
-                    // inventors
-                    val firstNames: BagOfWordsVariable,
-                    val middleNames: BagOfWordsVariable,
-                    val lastNames: BagOfWordsVariable,
-                    val locations: BagOfWordsVariable,
-                    //application
-                    val applicationIds: BagOfWordsVariable,
-                    val applicationTypes: BagOfWordsVariable,
-                    val applicationCountry: BagOfWordsVariable,
-                    // Claim
-                    // None
-                    // Patent
-                    val dates: BagOfWordsVariable,
-                    val patentCountry: BagOfWordsVariable,
-                    val patentTypes: BagOfWordsVariable,
-                    val title: BagOfWordsVariable,
-                    val titleEmb: DenseDoubleBagVariable,
-                    val keywords: BagOfWordsVariable,
-                    val coInventors: BagOfWordsVariable,
-                    // assignee
-                    val assignees: BagOfWordsVariable,
-                    val assigneeLocations: BagOfWordsVariable,
-                    // lawyers
-                    val lawyers: BagOfWordsVariable,
-                    val lawyersLocations: BagOfWordsVariable,
-                    // CPC
-                    val cpc: BagOfWordsVariable,
-                    // IPCR
-                    val ipcr: BagOfWordsVariable,
-                    // USPC
-                    val uspc: BagOfWordsVariable,
-                    // NBER
-                    val nber: BagOfWordsVariable,
-                    var canopy: String,
-                    val truth: BagOfWordsVariable, val source: String = "") extends NodeVariables[InventorVars] with MutableSingularCanopy with GroundTruth {
+                   // inventors
+                   val firstNames: BagOfWordsVariable,
+                   val middleNames: BagOfWordsVariable,
+                   val lastNames: BagOfWordsVariable,
+                   val locations: BagOfWordsVariable,
+                   //application
+                   val applicationIds: BagOfWordsVariable,
+                   val applicationTypes: BagOfWordsVariable,
+                   val applicationCountry: BagOfWordsVariable,
+                   // Claim
+                   // None
+                   // Patent
+                   val dates: BagOfWordsVariable,
+                   val patentCountry: BagOfWordsVariable,
+                   val patentTypes: BagOfWordsVariable,
+                   val title: BagOfWordsVariable,
+                   val titleEmb: DenseDoubleBagVariable,
+                   val keywords: BagOfWordsVariable,
+                   val coInventors: BagOfWordsVariable,
+                   // assignee
+                   val assignees: BagOfWordsVariable,
+                   val assigneeLocations: BagOfWordsVariable,
+                   // lawyers
+                   val lawyers: BagOfWordsVariable,
+                   val lawyersLocations: BagOfWordsVariable,
+                   // CPC
+                   val cpc: BagOfWordsVariable,
+                   // IPCR
+                   val ipcr: BagOfWordsVariable,
+                   // USPC
+                   val uspc: BagOfWordsVariable,
+                   // NBER
+                   val nber: BagOfWordsVariable,
+                   var canopy: String,
+                   val truth: BagOfWordsVariable,
+                   val source: String = "")
+    extends NodeVariables[InventorVars]
+    with MutableSingularCanopy
+    with GroundTruth {
 
   var provenance: Option[InventorMention] = None
 
-  def this(dim: Int) = this(new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new DenseDoubleBagVariable(dim), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), new BagOfWordsVariable(), "", new BagOfWordsVariable(), "")
+  def this(dim: Int) =
+    this(
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new DenseDoubleBagVariable(dim),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      new BagOfWordsVariable(),
+      "",
+      new BagOfWordsVariable(),
+      ""
+    )
 
   def this() = this(200)
 
-  def getVariables = Seq(firstNames, middleNames, lastNames, locations, applicationIds, applicationTypes, applicationCountry, dates, patentCountry, patentTypes, title, titleEmb, keywords, coInventors, assignees, assigneeLocations, lawyers, lawyersLocations, cpc, ipcr, uspc, nber)
+  def getVariables =
+    Seq(
+      firstNames,
+      middleNames,
+      lastNames,
+      locations,
+      applicationIds,
+      applicationTypes,
+      applicationCountry,
+      dates,
+      patentCountry,
+      patentTypes,
+      title,
+      titleEmb,
+      keywords,
+      coInventors,
+      assignees,
+      assigneeLocations,
+      lawyers,
+      lawyersLocations,
+      cpc,
+      ipcr,
+      uspc,
+      nber
+    )
 
   def --=(other: InventorVars)(implicit d: DiffList) = {
     this.firstNames remove other.firstNames.value
@@ -151,16 +210,61 @@ class InventorVars(
     if (d ne null) d += NoopDiff(this) // because EntityNameTemplate (and others) have InventorVar as its neighbor, but doesn't have the bags of words as neighbors
   }
 
-
-  def --(other: InventorVars
-          )(implicit d: DiffList) = {
-    new InventorVars(this.firstNames -- other.firstNames, this.middleNames -- other.middleNames, this.lastNames -- other.lastNames, this.locations -- other.locations, this.applicationIds -- other.applicationIds, this.applicationTypes -- other.applicationTypes, this.applicationCountry -- other.applicationCountry, this.dates -- other.dates, this.patentCountry -- other.patentCountry, this.patentTypes -- other.patentTypes, this.title -- other.title, this.titleEmb -- other.titleEmb, this.keywords -- other.keywords, this.coInventors -- other.coInventors, this.assignees -- other.assignees, this.assigneeLocations -- assigneeLocations, this.lawyers -- other.lawyers, this.lawyersLocations -- other.lawyersLocations, this.cpc -- other.cpc, this.ipcr -- other.ipcr, this.uspc -- other.uspc, this.nber -- other.nber, this.canopy,
-      this.truth -- other.truth)
+  def --(other: InventorVars)(implicit d: DiffList) = {
+    new InventorVars(
+      this.firstNames -- other.firstNames,
+      this.middleNames -- other.middleNames,
+      this.lastNames -- other.lastNames,
+      this.locations -- other.locations,
+      this.applicationIds -- other.applicationIds,
+      this.applicationTypes -- other.applicationTypes,
+      this.applicationCountry -- other.applicationCountry,
+      this.dates -- other.dates,
+      this.patentCountry -- other.patentCountry,
+      this.patentTypes -- other.patentTypes,
+      this.title -- other.title,
+      this.titleEmb -- other.titleEmb,
+      this.keywords -- other.keywords,
+      this.coInventors -- other.coInventors,
+      this.assignees -- other.assignees,
+      this.assigneeLocations -- assigneeLocations,
+      this.lawyers -- other.lawyers,
+      this.lawyersLocations -- other.lawyersLocations,
+      this.cpc -- other.cpc,
+      this.ipcr -- other.ipcr,
+      this.uspc -- other.uspc,
+      this.nber -- other.nber,
+      this.canopy,
+      this.truth -- other.truth
+    )
   }
 
   def ++(other: InventorVars)(implicit d: DiffList) = {
-    new InventorVars(this.firstNames ++ other.firstNames, this.middleNames ++ other.middleNames, this.lastNames ++ other.lastNames, this.locations ++ other.locations, this.applicationIds ++ other.applicationIds, this.applicationTypes ++ other.applicationTypes, this.applicationCountry ++ other.applicationCountry, this.dates ++ other.dates, this.patentCountry ++ other.patentCountry, this.patentTypes ++ other.patentTypes, this.title ++ other.title, this.titleEmb ++ other.titleEmb, this.keywords ++ other.keywords, this.coInventors ++ other.coInventors, this.assignees ++ other.assignees, this.assigneeLocations ++ assigneeLocations, this.lawyers ++ other.lawyers, this.lawyersLocations ++ other.lawyersLocations, this.cpc ++ other.cpc, this.ipcr ++ other.ipcr, this.uspc ++ other.uspc, this.nber ++ other.nber,
+    new InventorVars(
+      this.firstNames ++ other.firstNames,
+      this.middleNames ++ other.middleNames,
+      this.lastNames ++ other.lastNames,
+      this.locations ++ other.locations,
+      this.applicationIds ++ other.applicationIds,
+      this.applicationTypes ++ other.applicationTypes,
+      this.applicationCountry ++ other.applicationCountry,
+      this.dates ++ other.dates,
+      this.patentCountry ++ other.patentCountry,
+      this.patentTypes ++ other.patentTypes,
+      this.title ++ other.title,
+      this.titleEmb ++ other.titleEmb,
+      this.keywords ++ other.keywords,
+      this.coInventors ++ other.coInventors,
+      this.assignees ++ other.assignees,
+      this.assigneeLocations ++ assigneeLocations,
+      this.lawyers ++ other.lawyers,
+      this.lawyersLocations ++ other.lawyersLocations,
+      this.cpc ++ other.cpc,
+      this.ipcr ++ other.ipcr,
+      this.uspc ++ other.uspc,
+      this.nber ++ other.nber,
       this.canopy,
-      this.truth ++ other.truth)
+      this.truth ++ other.truth
+    )
   }
 }

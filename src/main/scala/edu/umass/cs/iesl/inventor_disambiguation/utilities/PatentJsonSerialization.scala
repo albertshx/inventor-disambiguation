@@ -17,7 +17,6 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-
 package edu.umass.cs.iesl.inventor_disambiguation.utilities
 
 import cc.factorie.util._
@@ -29,7 +28,6 @@ import org.json4s.jackson.Serialization
 
 import scala.collection.mutable
 
-
 /**
   * Modified version of implementation in factorie to support the BSON object ids
   * that will in records
@@ -37,37 +35,42 @@ import scala.collection.mutable
 object PatentJsonSerialization {
   implicit val formats = Serialization.formats(NoTypeHints)
 
-  def fromJsonString[C <: Cubbie](s: String,con: () => C): Option[C] = {
-    parseOpt(s).map(jvalue => JsonCubbieConverter.toCubbie(jvalue.asInstanceOf[JObject], con))
+  def fromJsonString[C <: Cubbie](s: String, con: () => C): Option[C] = {
+    parseOpt(s).map(jvalue =>
+      JsonCubbieConverter.toCubbie(jvalue.asInstanceOf[JObject], con))
   }
 
-  def toJsonString(c:Cubbie): String = compact(render(toJson(c)))
+  def toJsonString(c: Cubbie): String = compact(render(toJson(c)))
 
-  def toJson(c:Cubbie):JObject = {
-    def toJsonImpl(a:Any):JValue = {
+  def toJson(c: Cubbie): JObject = {
+    def toJsonImpl(a: Any): JValue = {
       a match {
         case null => JNull
-        case is:IntSeq => is._rawArray.slice(0,is.length).map(toJsonImpl).toIterable
-        case ds:DoubleSeq => ds._rawArray.slice(0,ds.length).map(toJsonImpl).toIterable
-        case m:mutable.Map[_,_] =>
-          m.toMap.map{case (k,v) => k.toString -> toJsonImpl(v)}
-        case it:Iterable[_] =>
+        case is: IntSeq =>
+          is._rawArray.slice(0, is.length).map(toJsonImpl).toIterable
+        case ds: DoubleSeq =>
+          ds._rawArray.slice(0, ds.length).map(toJsonImpl).toIterable
+        case m: mutable.Map[_, _] =>
+          m.toMap.map { case (k, v) => k.toString -> toJsonImpl(v) }
+        case it: Iterable[_] =>
           it.map(toJsonImpl)
-        case i:Int => i
-        case l:Long => l
-        case d:Double => d
-        case f:Float => f
-        case b:Boolean => b
-        case s:String => s
-        case d:java.util.Date => d.toString
+        case i: Int            => i
+        case l: Long           => l
+        case d: Double         => d
+        case f: Float          => f
+        case b: Boolean        => b
+        case s: String         => s
+        case d: java.util.Date => d.toString
 
         case id: org.bson.types.ObjectId => id.toString
-        case Some(an) => toJsonImpl(an)
-        case None => JNothing
-      }}
+        case Some(an)                    => toJsonImpl(an)
+        case None                        => JNothing
+      }
+    }
     toJsonImpl(c._map).asInstanceOf[JObject]
   }
 
-  def toCubbie[C <: Cubbie](jObj:JObject, con:() => C):C = JsonCubbieConverter.toCubbie(jObj,con)
+  def toCubbie[C <: Cubbie](jObj: JObject, con: () => C): C =
+    JsonCubbieConverter.toCubbie(jObj, con)
 
 }

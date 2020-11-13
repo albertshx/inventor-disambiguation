@@ -17,7 +17,6 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-
 package edu.umass.cs.iesl.inventor_disambiguation.coreference
 
 import cc.factorie._
@@ -28,34 +27,53 @@ import cc.factorie.variable.BagOfWordsVariable
 import scala.reflect.ClassTag
 
 
-
-class SizeLimitingEntityNameTemplate[Vars <: NodeVariables[Vars]](val firstLetterWeight:Double=4.0, val fullNameWeight:Double=4.0,val weight:Double=64,val saturation:Double=128.0, val penaltyOnNoName:Double=2.0, val sizeLimit: Int = 30, val exceedLimitPenalty: Double = 100, getBag:(Vars => BagOfWordsVariable), bagName:String = "")(implicit ct:ClassTag[Vars], params:Parameters)
-  extends TupleTemplateWithStatistics3[Node[Vars]#Exists,Node[Vars]#IsRoot,Vars]
-  with DebuggableTemplate {
+/**
+ *  score the distances between two mentions
+ *  weights should be tailored according to different languages
+ *  */
+class SizeLimitingEntityNameTemplate[Vars <: NodeVariables[Vars]](
+    val firstLetterWeight: Double = 4.0,
+    val fullNameWeight: Double = 4.0,
+    val weight: Double = 64,
+    val saturation: Double = 128.0,
+    val penaltyOnNoName: Double = 2.0,
+    val sizeLimit: Int = 30,
+    val exceedLimitPenalty: Double = 100,
+    getBag: (Vars => BagOfWordsVariable),
+    bagName: String = "")(implicit ct: ClassTag[Vars], params: Parameters)
+    extends TupleTemplateWithStatistics3[Node[Vars]#Exists,
+                                         Node[Vars]#IsRoot,
+                                         Vars]
+    with DebuggableTemplate {
 
   val name = "SizeLimitingEntityNameTemplate: %s".format(bagName)
 
-  def unroll1(exists: Node[Vars]#Exists) = Factor(exists, exists.node.isRootVar, exists.node.variables)
-  def unroll2(isRoot: Node[Vars]#IsRoot) = Factor(isRoot.node.existsVar, isRoot, isRoot.node.variables)
-  def unroll3(vars: Vars) = Factor(vars.node.existsVar, vars.node.isRootVar, vars)
+  def unroll1(exists: Node[Vars]#Exists) =
+    Factor(exists, exists.node.isRootVar, exists.node.variables)
+  def unroll2(isRoot: Node[Vars]#IsRoot) =
+    Factor(isRoot.node.existsVar, isRoot, isRoot.node.variables)
+  def unroll3(vars: Vars) =
+    Factor(vars.node.existsVar, vars.node.isRootVar, vars)
 
-
-  override def score(exists: Node[Vars]#Exists#Value, isRoot: Node[Vars]#IsRoot#Value, vars: Vars) = {
+  override def score(exists: Node[Vars]#Exists#Value,
+                     isRoot: Node[Vars]#IsRoot#Value,
+                     vars: Vars) = {
     var score = 0.0
     var firstLetterMismatches = 0
     var nameMismatches = 0
     val bag = getBag(vars)
     val uniqueEntries = bag.value.asHashMap.keySet
     if (uniqueEntries.size > sizeLimit) {
-      score -= math.min(saturation,exceedLimitPenalty)
+      score -= math.min(saturation, exceedLimitPenalty)
     } else {
-      bag.value.asHashMap.keySet.pairs.foreach { case (tokI, tokJ) =>
-        if (tokI.charAt(0) != tokJ.charAt(0)) {
-          firstLetterMismatches += 1
-        }
-        if (tokI.length > 1 && tokJ.length > 1) {
-          nameMismatches += tokI editDistance tokJ
-        }
+      bag.value.asHashMap.keySet.pairs.foreach {
+        case (tokI, tokJ) =>
+          if (tokI.charAt(0) != tokJ.charAt(0)) {
+            firstLetterMismatches += 1
+          }
+          if (tokI.length > 1 && tokJ.length > 1) {
+            nameMismatches += tokI editDistance tokJ
+          }
       }
       score -= math.min(saturation, firstLetterMismatches * firstLetterWeight)
       score -= math.min(saturation, nameMismatches * fullNameWeight)

@@ -17,17 +17,20 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-
 package edu.umass.cs.iesl.inventor_disambiguation.data_structures
 
 class Claim extends PatentsViewRecord {
-  
+
   val uuid = new StringSlot("uuid")
   val text = new StringSlot("text")
   val dependent = new StringSlot("dependent")
   val sequence = new StringSlot("sequence")
-  
-  def this(uuid: Option[String], patentID: Option[String], text: Option[String], dependent: Option[String], sequence: Option[String]) = {
+
+  def this(uuid: Option[String],
+           patentID: Option[String],
+           text: Option[String],
+           dependent: Option[String],
+           sequence: Option[String]) = {
     this()
     this.uuid.set(uuid)
     this.patentID.set(patentID)
@@ -35,10 +38,7 @@ class Claim extends PatentsViewRecord {
     this.dependent.set(dependent)
     this.sequence.set(sequence)
   }
-  
+
 }
 
 object Claim extends Claim
-
-
-

@@ -17,27 +17,27 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-
 package edu.umass.cs.iesl.inventor_disambiguation.utilities
 
 import java.io._
 import cc.factorie._
 
 object FileIO {
-  
+
   def merge(inputs: Iterable[File], output: File, codec: String = "UTF-8") = {
     val writer = new PrintWriter(output, codec)
-    inputs.foreach(i => new BufferedReader(new InputStreamReader(new FileInputStream(i), codec)).toIterator.foreach {
-      line =>
-        writer.println(line)
-        writer.flush()
-    })
+    inputs.foreach(i =>
+      new BufferedReader(new InputStreamReader(new FileInputStream(i), codec)).toIterator
+        .foreach { line =>
+          writer.println(line)
+          writer.flush()
+      })
     writer.close()
   }
 
-  def deleteFiles(files: Iterable[File]): Unit = 
+  def deleteFiles(files: Iterable[File]): Unit =
     files.foreach(_.delete())
-  
+
   def delete(filenames: Iterable[String]): Unit =
     deleteFiles(filenames.map(new File(_)))
 }

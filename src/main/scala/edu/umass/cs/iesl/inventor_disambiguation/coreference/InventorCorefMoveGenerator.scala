@@ -17,31 +17,32 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-
 package edu.umass.cs.iesl.inventor_disambiguation.coreference
-
 
 import cc.factorie.app.nlp.hcoref._
 import cc.factorie.infer.SettingsSampler
 
 /**
- * This is the move generator that is used in disambiguation.
- * @tparam Vars
- */
-trait InventorCorefMoveGenerator[Vars <: NodeVariables[Vars]]  extends MoveGenerator[Vars]{
-  this :SettingsSampler[(Node[Vars], Node[Vars])] =>
+  * This is the move generator that is used in disambiguation.
+  * @tparam Vars
+  */
+trait InventorCorefMoveGenerator[Vars <: NodeVariables[Vars]]
+    extends MoveGenerator[Vars] {
+  this: SettingsSampler[(Node[Vars], Node[Vars])] =>
 
-  def settings(c:(Node[Vars], Node[Vars])) = new MoveSettingIterator[Vars] {
+  def settings(c: (Node[Vars], Node[Vars])) = new MoveSettingIterator[Vars] {
     var (e1, e2) = c
 
     val moves = new scala.collection.mutable.ArrayBuffer[Move[Vars]]()
 
-    if(e1.root != e2.root) {
-      if(e1.isMention && e2.isMention && e1.isRoot && e2.isRoot) {
-        moves += new MergeUp[Vars](e1, e2)({d => newInstance(d)})
+    if (e1.root != e2.root) {
+      if (e1.isMention && e2.isMention && e1.isRoot && e2.isRoot) {
+        moves += new MergeUp[Vars](e1, e2)({ d =>
+          newInstance(d)
+        })
       } else {
         while (e1 != null) {
-          if(e1.mentionCountVar.value >= e2.mentionCountVar.value) {
+          if (e1.mentionCountVar.value >= e2.mentionCountVar.value) {
             if (!e1.isMention)
               moves += new MergeLeft[Vars](e1, e2)
           } else {
@@ -53,11 +54,11 @@ trait InventorCorefMoveGenerator[Vars <: NodeVariables[Vars]]  extends MoveGener
       }
     } else {
       if (!e1.isMention && !e2.isMention)
-        if(e1.mentionCountVar.value > e2.mentionCountVar.value) {
+        if (e1.mentionCountVar.value > e2.mentionCountVar.value) {
           moves += new SplitRight[Vars](e2, e1)
         } else {
-         moves += new SplitRight[Vars](e1, e2)
-       }
+          moves += new SplitRight[Vars](e1, e2)
+        }
     }
 
     moves += new NoMove[Vars]
