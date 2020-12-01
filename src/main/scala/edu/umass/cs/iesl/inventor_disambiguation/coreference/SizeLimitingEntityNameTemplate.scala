@@ -26,11 +26,10 @@ import cc.factorie.variable.BagOfWordsVariable
 
 import scala.reflect.ClassTag
 
-
 /**
- *  score the distances between two mentions
- *  weights should be tailored according to different languages
- *  */
+  *  score the distances between two mentions
+  *  weights should be tailored according to different languages
+  *  */
 class SizeLimitingEntityNameTemplate[Vars <: NodeVariables[Vars]](
     val firstLetterWeight: Double = 4.0,
     val fullNameWeight: Double = 4.0,
